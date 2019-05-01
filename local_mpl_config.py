@@ -1,15 +1,23 @@
 #!/usr/bin/env python3
-# matplotlib-3.x.x+ requires python3
-
-import cycler
-import inspect
-import matplotlib
-import os
-import sys
-
 """
 
-usage: We generally use one directory or script per figure generated.
+local_mpl_config.py
+
+requirements:
+  - matplotlib-3.x.x+ requires python3
+  - Helvetica*.ttf fonts installed in matplotlib fonts directory
+
+    if you're using MacPorts, the fonts directory is here:
+
+      /opt/local/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/matplotlib/mpl-data/fonts/ttf
+
+    the following guide is very helpful:
+
+      https://olgabotvinnik.com/blog/how-to-set-helvetica-as-the-default-sans-serif-font-in/
+
+usage:
+
+  We generally use one directory or script per figure generated.
   Easiest way to get started is to copy this file somewhere,
   then create a symlink in each figure's directory:
 
@@ -18,20 +26,27 @@ usage: We generally use one directory or script per figure generated.
     figures/local_mpl_config.py
 
 some useful resources:
+
   - anatomy of a figure: https://matplotlib.org/_images/anatomy.png
   - matplotlib for papers: https://github.com/jbmouret/matplotlib_for_papers
 
 a lot of credit for various functions in this file goes to those who
-  answered questions on stackoverflow.
-
+answered questions on stackoverflow.
 """
+
+__version__ = '1.0'
+
+import cycler
+import inspect
+import matplotlib
+import os
+import sys
 
 def initialize():
   """
-    Helvetica*.ttf fonts need to be in (if you're using MacPorts):
-    
-      /opt/local/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/matplotlib/mpl-data/fonts/ttf  
-
+  Initializes the figure with reasonably sane settings--the most
+  important of which is telling matplotlib to use Type1 fonts (the ACM
+  paper format checker will complain endlessly if using Type3).
   """
   matplotlib.rcParams.update({
       'pdf.fonttype'         : 42 # use Type1 fonts instead of Type3
@@ -72,7 +87,17 @@ def initialize():
       ,'savefig.dpi'         : 600
     })
 
-def set_colors(colorset):
+def set_colors(colorset='solarized'):
+  """
+  Set the color cycle to one of the following: ['solarized', 'bright',
+  'high contrast', 'vibrant', 'muted', 'light']
+
+  If no colorset is specified, the default is 'solarized'.
+  """
+
+  # TODO move the palettes outside of this function so we can use them
+  # individually.
+
   # solarized: https://ethanschoonover.com/solarized/
   SOLARIZED = {
     "base03"  : "#002B36",
@@ -219,7 +244,6 @@ def set_colors(colorset):
     LIGHT["pear"],
     LIGHT["olive"],
     LIGHT["pale grey"] ])
-  ###################################################################### 
 
   COLOR = {
             'solarized'     : SOLARIZED_CYCLER,
@@ -233,14 +257,18 @@ def set_colors(colorset):
   params = { "axes.prop_cycle": COLOR }
   matplotlib.rcParams.update(params)
 
-"""
-Set the title, which we generally crop when including inside paper
-written with LaTeX:
-
-  \includegraphics[width=\linewidth, trim=0 0 0 17px, clip=true]{figure.pdf}
-
-"""
 def set_title(plot_title,twiny=False):
+  """
+  The title is placed a bit higher and in a smaller font than default,
+  because we generally crop it when including the graphic in a paper
+  written with LaTeX:
+
+    \includegraphics[trim=0 0 0 17px, clip=true]{figure.pdf}
+
+  It's useful to include some metadata or some other information
+  in this title when reviewing multiple graphs or figures for
+  analysis or discussion.
+  """
   ax = matplotlib.pyplot.gca()
 
   y = 1.05
@@ -293,17 +321,30 @@ def adjust_ticks(ax):
     top         = False,   # ticks along the top edge are off
     labelbottom = True)    # labels along the bottom edge are off
 
-"""
-We generally write one Python script per figure.
-Save the PDF to the currently executing filename (without extension).
-"""
-def savefig():
-  #matplotlib.pyplot.savefig(os.path.basename(__file__)[:-3] + ".pdf", format="pdf", bbox_inches="tight")
+def _savefig(filename=None, format=None):
+  if filename == None or format == None:
+    raise ValueError('no filename or format specified')
+  matplotlib.pyplot.savefig(filename, format=format, bbox_inches="tight")
 
+def savepng():
+  """
+  We generally write one Python script per figure.
+  Save the PNG to the currently executing filename (without extension).
+  """
   frame = inspect.stack()[1]
   filename = frame[0].f_code.co_filename
 
-  matplotlib.pyplot.savefig(os.path.basename(filename)[:-3] + ".pdf", format="pdf", bbox_inches="tight")
+  _savefig(os.path.basename(filename)[:-3] + ".png", format="png")
+
+def savepdf():
+  """
+  We generally write one Python script per figure.
+  Save the PDF to the currently executing filename (without extension).
+  """
+  frame = inspect.stack()[1]
+  filename = frame[0].f_code.co_filename
+
+  _savefig(os.path.basename(filename)[:-3] + ".pdf", format="pdf")
 
 if __name__ == '__main__':
   print("import me, don't use me directly!")

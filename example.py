@@ -5,6 +5,7 @@ import numpy as np
 
 import local_mpl_config as lmc
 
+# initialize and set the colors before creating a figure
 lmc.initialize()
 lmc.set_colors('vibrant')
 
@@ -26,7 +27,15 @@ ax.set_ylim(0, 70)
 
 ax.legend(loc=(0.05,0.6))
 
+# see local_mpl_config.set_title() documentation
 lmc.set_title(r'title of the graph $x^n$')
+
+# display only the left and bottom axes
 lmc.adjust_spines(ax, ['left', 'bottom'], zero=False)
 lmc.adjust_ticks(ax)
-lmc.savefig() # run "example.py", saves to "example.pdf"
+
+# run "example.py", saves to "example.pdf"
+lmc.savepdf()
+
+# run "example.py", saves to "example.png"
+lmc.savepng()
