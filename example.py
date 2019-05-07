@@ -31,7 +31,7 @@ ax.legend(loc=(0.05,0.6))
 lmc.set_title(r'title of the graph $x^n$')
 
 # display only the left and bottom axes
-lmc.adjust_spines(ax, ['left', 'bottom'], zero=False)
+lmc.adjust_spines(ax, ['left', 'bottom'], amounts={'left': -15, 'bottom': 10})
 lmc.adjust_ticks(ax)
 
 # run "example.py", saves to "example.pdf"

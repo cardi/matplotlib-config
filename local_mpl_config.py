@@ -34,7 +34,7 @@ a lot of credit for various functions in this file goes to those who
 answered questions on stackoverflow.
 """
 
-__version__ = '1.0'
+__version__ = '1.1'
 
 import cycler
 import inspect
@@ -87,6 +87,156 @@ def initialize():
       ,'savefig.dpi'         : 600
     })
 
+# TODO move the palettes outside of this function so we can use them
+# individually.
+
+# solarized: https://ethanschoonover.com/solarized/
+SOLARIZED = {
+  "base03"  : "#002B36",
+  "base02"  : "#073642",
+  "base01"  : "#586e75",
+  "base00"  : "#657b83",
+  "base0"   : "#839496",
+  "base1"   : "#93a1a1",
+  "base2"   : "#eee8d5",
+  "base3"   : "#fdf6e3",
+  "yellow"  : "#b58900",
+  "orange"  : "#cb4b16",
+  "red"     : "#dc322F",
+  "magenta" : "#d33682",
+  "violet"  : "#6c71c4",
+  "blue"    : "#268bd2",
+  "cyan"    : "#2aa198",
+  "green"   : "#859900"
+}
+
+SOLARIZED_CYCLER = cycler.cycler(color=[
+  SOLARIZED["blue"],
+  SOLARIZED["green"],
+  SOLARIZED["red"],
+  SOLARIZED["cyan"],
+  SOLARIZED["magenta"],
+  SOLARIZED["yellow"],
+  SOLARIZED["base00"]])
+
+# the following schemes are from https://personal.sron.nl/~pault
+BRIGHT = {
+  "blue"   : "#4477aa",
+  "cyan"   : "#66ccee",
+  "green"  : "#228833",
+  "yellow" : "#ccbb44",
+  "red"    : "#ee6677",
+  "purple" : "#aa3377",
+  "grey"   : "#bbbbbb"
+}
+
+BRIGHT_CYCLER = cycler.cycler(color=[
+  BRIGHT["blue"],
+  BRIGHT["red"],
+  BRIGHT["green"],
+  BRIGHT["yellow"],
+  BRIGHT["cyan"],
+  BRIGHT["purple"],
+  BRIGHT["grey"]])
+
+HIGH_CONTRAST = {
+  "white"  : "#ffffff",
+  "yellow" : "#ddaa33",
+  "red"    : "#bb5566",
+  "blue"   : "#004488",
+  "black"  : "#000000"
+}
+
+HIGH_CONTRAST_CYCLER = cycler.cycler(color=[
+  HIGH_CONTRAST["blue"],
+  HIGH_CONTRAST["yellow"],
+  HIGH_CONTRAST["red"]])
+
+VIBRANT = {
+  "blue": "#0077BB",
+  "cyan": "#33bbee",
+  "teal": "#009988",
+  "orange": "#ee7733",
+  "red": "#cc3311",
+  "magenta": "#ee3377",
+  "grey": "#bbbbbb"
+}
+
+VIBRANT_CYCLER = cycler.cycler(color=[
+  VIBRANT["orange"],
+  VIBRANT["blue"],
+  VIBRANT["cyan"],
+  VIBRANT["magenta"],
+  VIBRANT["red"],
+  VIBRANT["teal"],
+  VIBRANT["grey"] ])
+
+MUTED = {
+  "indigo"    : "#332288",
+  "cyan"      : "#88ccee",
+  "teal"      : "#44aa99",
+  "green"     : "#117733",
+  "olive"     : "#999933",
+  "sand"      : "#ddcc77",
+  "rose"      : "#cc6677",
+  "wine"      : "#882255",
+  "purple"    : "#aa4499",
+  "pale grey" : "#dddddd"
+}
+
+MUTED_CYCLER = cycler.cycler(color=[
+  MUTED["rose"],
+  MUTED["indigo"],
+  MUTED["sand"],
+  MUTED["green"],
+  MUTED["cyan"],
+  MUTED["wine"],
+  MUTED["teal"],
+  MUTED["olive"],
+  MUTED["purple"],
+  MUTED["pale grey"] ])
+
+PALE = {
+  "pale blue"   : "#bbccee",
+  "pale cyan"   : "#cceeff",
+  "pale green"  : "#ccddaa",
+  "pale yellow" : "#eeeebb",
+  "pale red"    : "#ffcccc",
+  "pale grey"   : "#dddddd"
+}
+
+DARK = {
+  "dark blue"   : "#222255",
+  "dark cyan"   : "#225555",
+  "dark green"  : "#225522",
+  "dark yellow" : "#666633",
+  "dark red"    : "#663333",
+  "dark grey"   : "#555555"
+}
+
+LIGHT = {
+  "light blue"   : "#77aadd",
+  "light cyan"   : "#99ddff",
+  "mint"         : "#44bb99",
+  "pear"         : "#bbcc33",
+  "olive"        : "#aaaa00",
+  "light yellow" : "#eedd88",
+  "orange"       : "#ee8866",
+  "pink"         : "#ffaabb",
+  "pale grey"    : "#dddddd"
+}
+
+LIGHT_CYCLER = cycler.cycler(color=[
+  LIGHT["light blue"],
+  LIGHT["orange"],
+  LIGHT["light yellow"],
+  LIGHT["pink"],
+  LIGHT["light cyan"],
+  LIGHT["mint"],
+  LIGHT["pear"],
+  LIGHT["olive"],
+  LIGHT["pale grey"] ])
+
 def set_colors(colorset='solarized'):
   """
   Set the color cycle to one of the following: ['solarized', 'bright',
@@ -94,157 +244,15 @@ def set_colors(colorset='solarized'):
 
   If no colorset is specified, the default is 'solarized'.
   """
+  params = { "axes.prop_cycle": get_color_cycle(colorset) }
+  matplotlib.rcParams.update(params)
 
-  # TODO move the palettes outside of this function so we can use them
-  # individually.
+def get_color_cycle(colorset='solarized'):
+  """
+  Get a particular color cycle.
 
-  # solarized: https://ethanschoonover.com/solarized/
-  SOLARIZED = {
-    "base03"  : "#002B36",
-    "base02"  : "#073642",
-    "base01"  : "#586e75",
-    "base00"  : "#657b83",
-    "base0"   : "#839496",
-    "base1"   : "#93a1a1",
-    "base2"   : "#eee8d5",
-    "base3"   : "#fdf6e3",
-    "yellow"  : "#b58900",
-    "orange"  : "#cb4b16",
-    "red"     : "#dc322F",
-    "magenta" : "#d33682",
-    "violet"  : "#6c71c4",
-    "blue"    : "#268bd2",
-    "cyan"    : "#2aa198",
-    "green"   : "#859900"
-  }
-
-  SOLARIZED_CYCLER = cycler.cycler(color=[
-    SOLARIZED["blue"],
-    SOLARIZED["green"],
-    SOLARIZED["red"],
-    SOLARIZED["cyan"],
-    SOLARIZED["magenta"],
-    SOLARIZED["yellow"],
-    SOLARIZED["base00"]])
-
-  # the following schemes are from https://personal.sron.nl/~pault
-  BRIGHT = {
-    "blue"   : "#4477aa",
-    "cyan"   : "#66ccee",
-    "green"  : "#228833",
-    "yellow" : "#ccbb44",
-    "red"    : "#ee6677",
-    "purple" : "#aa3377",
-    "grey"   : "#bbbbbb"
-  }
-
-  BRIGHT_CYCLER = cycler.cycler(color=[
-    BRIGHT["blue"],
-    BRIGHT["red"],
-    BRIGHT["green"],
-    BRIGHT["yellow"],
-    BRIGHT["cyan"],
-    BRIGHT["purple"],
-    BRIGHT["grey"]])
-
-  HIGH_CONTRAST = {
-    "white"  : "#ffffff",
-    "yellow" : "#ddaa33",
-    "red"    : "#bb5566",
-    "blue"   : "#004488",
-    "black"  : "#000000"
-  }
-
-  HIGH_CONTRAST_CYCLER = cycler.cycler(color=[
-    HIGH_CONTRAST["blue"],
-    HIGH_CONTRAST["yellow"],
-    HIGH_CONTRAST["red"]])
-
-  VIBRANT = {
-    "blue": "#0077BB",
-    "cyan": "#33bbee",
-    "teal": "#009988",
-    "orange": "#ee7733",
-    "red": "#cc3311",
-    "magenta": "#ee3377",
-    "grey": "#bbbbbb"
-  }
-
-  VIBRANT_CYCLER = cycler.cycler(color=[
-    VIBRANT["orange"],
-    VIBRANT["blue"],
-    VIBRANT["cyan"],
-    VIBRANT["magenta"],
-    VIBRANT["red"],
-    VIBRANT["teal"],
-    VIBRANT["grey"] ])
-
-  MUTED = {
-    "indigo"    : "#332288",
-    "cyan"      : "#88ccee",
-    "teal"      : "#44aa99",
-    "green"     : "#117733",
-    "olive"     : "#999933",
-    "sand"      : "#ddcc77",
-    "rose"      : "#cc6677",
-    "wine"      : "#882255",
-    "purple"    : "#aa4499",
-    "pale grey" : "#dddddd"
-  }
-
-  MUTED_CYCLER = cycler.cycler(color=[
-    MUTED["rose"],
-    MUTED["indigo"],
-    MUTED["sand"],
-    MUTED["green"],
-    MUTED["cyan"],
-    MUTED["wine"],
-    MUTED["teal"],
-    MUTED["olive"],
-    MUTED["purple"],
-    MUTED["pale grey"] ])
-
-  PALE = {
-    "pale blue"   : "#bbccee",
-    "pale cyan"   : "#cceeff",
-    "pale green"  : "#ccddaa",
-    "pale yellow" : "#eeeebb",
-    "pale red"    : "#ffcccc",
-    "pale grey"   : "#dddddd"
-  }
-
-  DARK = {
-    "dark blue"   : "#222255",
-    "dark cyan"   : "#225555",
-    "dark green"  : "#225522",
-    "dark yellow" : "#666633",
-    "dark red"    : "#663333",
-    "dark grey"   : "#555555"
-  }
-
-  LIGHT = {
-    "light blue"   : "#77aadd",
-    "light cyan"   : "#99ddff",
-    "mint"         : "#44bb99",
-    "pear"         : "#bbcc33",
-    "olive"        : "#aaaa00",
-    "light yellow" : "#eedd88",
-    "orange"       : "#ee8866",
-    "pink"         : "#ffaabb",
-    "pale grey"    : "#dddddd"
-  }
-
-  LIGHT_CYCLER = cycler.cycler(color=[
-    LIGHT["light blue"],
-    LIGHT["orange"],
-    LIGHT["light yellow"],
-    LIGHT["pink"],
-    LIGHT["light cyan"],
-    LIGHT["mint"],
-    LIGHT["pear"],
-    LIGHT["olive"],
-    LIGHT["pale grey"] ])
-
+  If no colorset is specified, the default is 'solarized'.
+  """
   COLOR = {
             'solarized'     : SOLARIZED_CYCLER,
             'bright'        : BRIGHT_CYCLER,
@@ -254,8 +262,23 @@ def set_colors(colorset='solarized'):
             'light'         : LIGHT_CYCLER
           }.get(colorset, SOLARIZED_CYCLER)
 
-  params = { "axes.prop_cycle": COLOR }
-  matplotlib.rcParams.update(params)
+  return COLOR
+
+def set_suptitle(plot_title):
+  """
+  Set the title of the figure when there are multiple subplots.
+
+  The title is placed a bit higher and in a smaller font than default,
+  because we generally crop it when including the graphic in a paper
+  written with LaTeX:
+
+    \includegraphics[trim=0 0 0 17px, clip=true]{figure.pdf}
+
+  It's useful to include some metadata or some other information
+  in this title when reviewing multiple graphs or figures for
+  analysis or discussion.
+  """
+  matplotlib.pyplot.suptitle(plot_title, y=1.05, fontsize=10)
 
 def set_title(plot_title,twiny=False):
   """
@@ -283,16 +306,35 @@ def set_title(plot_title,twiny=False):
         transform           = ax.transAxes,
         fontsize            = 10)
 
-def adjust_spines(ax,spines,zero=False):
+def adjust_spines(ax, spines, position='outward', amounts=None):
+  """
+  ax: the axis to adjust spines on
+
+  spines: a list of spine locations to set visible, e.g., ['left',
+  'right', 'bottom', 'top']
+
+  position: position of spine. currently supported: 'zero', 'outward'
+  (default)
+
+  amounts: A dictionary containing spine locations and points. When used
+  in conjunction with position='outward', place the spine out a number
+  of points (or in, if negative).
+
+  Default: {'left': 0, 'bottom': 0 }
+
+  Example: {'left': -2, 'bottom': 0 }
+  """
   for loc, spine in ax.spines.items():
     if loc in spines:
-      if zero == True:
+      if position == 'zero':
         spine.set_position('zero')
-      else:
+      elif position == 'outward':
         if loc == 'left':
-          spine.set_position(('outward', -12))
+          spine.set_position(('outward', amounts.get('left', 0) if amounts else 0))
         if loc == 'bottom':
-          spine.set_position(('outward', 10))
+          spine.set_position(('outward', amounts.get('bottom', 0) if amounts else 0))
+      else:
+        spine.set_position(('outward', 0))
       spine.set_smart_bounds(True)
       #spine.set_position('center')
       #pass
@@ -313,6 +355,9 @@ def adjust_spines(ax,spines,zero=False):
     ax.xaxis.set_ticks([])
 
 def adjust_ticks(ax):
+  """
+  Given an axis 'ax', set some defaults.
+  """
   ax.minorticks_off()      # turn off all minor ticks
   ax.tick_params(
     axis        = 'both',  # changes apply to the x-axis
