@@ -264,6 +264,23 @@ def get_color_cycle(colorset='solarized'):
 
   return COLOR
 
+def get_colorset(colorset='solarized'):
+  """
+  Get a particular color cycle.
+
+  If no colorset is specified, the default is 'solarized'.
+  """
+  COLOR = {
+            'solarized'     : SOLARIZED,
+            'bright'        : BRIGHT,
+            'high contrast' : HIGH_CONTRAST,
+            'vibrant'       : VIBRANT,
+            'muted'         : MUTED,
+            'light'         : LIGHT
+          }.get(colorset, SOLARIZED)
+
+  return COLOR
+
 def set_suptitle(plot_title):
   """
   Set the title of the figure when there are multiple subplots.
