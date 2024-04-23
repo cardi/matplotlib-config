@@ -5,8 +5,8 @@
 
 ## Dependencies
 
-* matplotlib3.0.0+ (tested on matplotlib 3.0.3)
-* python3 (tested on python 3.7.3)
+* matplotlib3.0.0+ (tested on matplotlib 3.6.2)
+* python3 (tested on python 3.9.18)
 
 ## Usage
 
