@@ -23,6 +23,8 @@ ax.plot(x, x**6, label=r'$x^6$')
 ax.set_xlabel('x label')
 ax.set_ylabel('y label')
 
+# manually set bounds as set_smart_bounds no longer exists
+ax.set_xlim(0, 2)
 ax.set_ylim(0, 70)
 
 ax.legend(loc=(0.05,0.6))
@@ -30,8 +32,8 @@ ax.legend(loc=(0.05,0.6))
 # see local_mpl_config.set_title() documentation
 lmc.set_title(r'title of the graph $x^n$')
 
-# display only the left and bottom axes
-lmc.adjust_spines(ax, ['left', 'bottom'], amounts={'left': -15, 'bottom': 10})
+# display only the left and bottom axes, and move them outward a bit
+lmc.adjust_spines(ax, ['left', 'bottom'], amounts={'left': 10, 'bottom': 10})
 lmc.adjust_ticks(ax)
 
 # run "example.py", saves to "example.pdf"
