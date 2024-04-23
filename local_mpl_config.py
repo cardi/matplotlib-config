@@ -352,9 +352,6 @@ def adjust_spines(ax, spines, position='outward', amounts=None):
           spine.set_position(('outward', amounts.get('bottom', 0) if amounts else 0))
       else:
         spine.set_position(('outward', 0))
-      spine.set_smart_bounds(True)
-      #spine.set_position('center')
-      #pass
     else:
       spine.set_visible(False)
 
